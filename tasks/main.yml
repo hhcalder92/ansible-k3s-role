@@ -1,0 +1,11 @@
+---
+# tasks file for k3s-role
+- include: reset.yml
+  when: k3s.reset.before
+
+- include: pre.yml
+- include: download.yml
+- include: raspberrypi/main.yml
+
+- include: reset.yml
+  when: k3s.reset.after

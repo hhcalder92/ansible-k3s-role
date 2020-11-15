@@ -1,0 +1,13 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+platforms:
+  - name: instance
+    image: debian/jessie64
+    pre_build_image: true
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
