@@ -7,7 +7,11 @@
   failed_when: false
   with_items:
     - k3s
-    - k3s-node
+
+- name: "** Reset ** run kill all script provided by k3s"
+  shell:
+    cmd: "/usr/local/bin/k3s-killall.sh"
+  ignore_errors: true
 
 - name: '** Reset ** pkill -9 -f "k3s/data/[^/]+/bin/containerd-shim-runc"'
   register: pkill_containerd_shim_runc
@@ -30,8 +34,8 @@
     name: "{{ item }}"
     state: absent
   with_items:
-    - "{{ systemd_dir }}/k3s.service"
-    - "{{ systemd_dir }}/k3s-node.service"
+    - "{{ k3s_systemd_service_file_path }}"
+    - "{{ k3s_systemd_environment_file_path }}"
     - /etc/rancher/k3s
     - /var/lib/rancher/k3s
     - /var/lib/kubelet

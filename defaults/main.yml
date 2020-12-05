@@ -1,14 +1,20 @@
 ---
 # defaults file for k3s-role
-k3s_version: v1.17.5+k3s1
-k3s_system_user: vagrant
-systemd_dir: /etc/systemd/system
+k3s_version: v1.19.4+k3s1
+k3s_system_user: pi
+
 master_ip: "{{ hostvars[groups['master'][0]]['ansible_host'] | default(groups['master'][0]) }}"
-extra_server_args: ""
+extra_server_args: "--disable traefik --disable metrics-server"
 extra_agent_args: ""
 
-k3s:
-  reset:
-    before: false
-    after: false
-  type: master
+k3s_reset: true
+k3s_type: master
+
+k3s_systemd_service_file_path: /etc/systemd/system/k3s.service
+k3s_systemd_environment_file_path: /etc/default/k3s
+k3s_registries: []
+
+
+apt:
+  deps:
+    - "nfs-common"

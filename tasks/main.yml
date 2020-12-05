@@ -1,11 +1,19 @@
 ---
 # tasks file for k3s-role
+- name: "** node type"
+  debug:
+    msg: "k3s_type: {{k3s_type}}"
+
 - include: reset.yml
-  when: k3s.reset.before
+  when: k3s_reset
 
 - include: pre.yml
 - include: download.yml
 - include: raspberrypi/main.yml
 
-- include: reset.yml
-  when: k3s.reset.after
+# because order matters
+- include: "{{k3s_type}}.yml"
+  when: k3s_type == 'master'
+
+- include: "{{k3s_type}}.yml"
+  when: k3s_type == 'node'

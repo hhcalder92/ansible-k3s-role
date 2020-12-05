@@ -1,3 +1,5 @@
+# {{ansible_managed}}
+
 [Unit]
 Description=Lightweight Kubernetes
 Documentation=https://k3s.io
@@ -7,18 +9,15 @@ After=network-online.target
 Type=notify
 ExecStartPre=-/sbin/modprobe br_netfilter
 ExecStartPre=-/sbin/modprobe overlay
+EnvironmentFile={{ k3s_systemd_environment_file_path | default("") }}
 
-{% if 'master' in k3.type  %}
+{% if 'master' in k3s_type  %}
 # Master configuration
-ExecStart=/usr/local/bin/k3s server {{ extra_server_args | default("") }}
-{% elif 'node' in k3.type  %}
-
-# Node configuration
-ExecStart=/usr/local/bin/k3s agent --server https://{{ master_ip }}:6443 --token {{ hostvars[groups['master'][0]]['token'] }} {{ extra_agent_args | default("") }}
+ExecStart=/usr/local/bin/k3s server $K3S_ARGS
 {% else  %}
-ExecStart=/usr/local/bin/k3s agent --server https://{{ master_ip }}:6443 --token {{ hostvars[groups['master'][0]]['token'] }} {{ extra_agent_args | default("") }}
+# Node configuration
+ExecStart=/usr/local/bin/k3s agent $K3S_ARGS
 {% endif  %}
-
 
 KillMode=process
 Delegate=yes

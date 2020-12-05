@@ -1,0 +1,7 @@
+# {{ansible_managed}}
+
+{% if 'master' in k3s_type  %}
+K3S_ARGS="{{ extra_server_args | default("") }}"
+{% else  %}
+K3S_ARGS="--server https://{{ master_ip }}:6443 --token {{ hostvars[groups['master'][0]]['token'] }} {{ extra_agent_args | default("") }}"
+{% endif  %}

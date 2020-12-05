@@ -1,0 +1,32 @@
+- name: "** Systemd ** Copy K3s environment file"
+  register: k3s_service
+  template:
+    src: "k3s.environment.j2"
+    dest: "{{ k3s_systemd_environment_file_path }}"
+    owner: root
+    group: root
+    mode: 0755
+
+- name: "** Systemd ** Copy K3s service file"
+  register: k3s_service
+  template:
+    src: "k3s.service.j2"
+    dest: "{{ k3s_systemd_service_file_path }}"
+    owner: root
+    group: root
+    mode: 0755
+
+# Needed: Doesn't always end well
+- name: "** Systemd ** Stop K3s service config changed"
+  systemd:
+    name: k3s
+    state: stopped
+  when: k3s_service.changed
+  ignore_errors: true
+
+- name: "** Systemd ** Enable and check K3s service"
+  systemd:
+    name: k3s
+    daemon_reload: yes
+    state: started
+    enabled: yes

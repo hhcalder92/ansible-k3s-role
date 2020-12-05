@@ -1,18 +1,15 @@
-Role Name
+K3s role 
 =========
 
-A brief description of the role goes here.
-
-Requirements
-------------
-
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+Sets up k3s on arm or x86 systems
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
-
+ in defaults:
+ 
+ in vars: 
+ 
 Dependencies
 ------------
 
@@ -23,9 +20,19 @@ Example Playbook
 
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
-    - hosts: servers
+    - hosts: k3s_cluster
+      become: yes
       roles:
-         - { role: username.rolename, x: 42 }
+        - role: k3s-role
+        
+Just nodes,
+
+    - hosts: k3s_nods 
+      become: yes
+      vars: k3s_type: node
+      roles:
+        - role: k3s-role
+        
 
 License
 -------
