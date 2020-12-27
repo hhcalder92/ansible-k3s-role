@@ -27,7 +27,7 @@ Including an example of how to use your role (for instance, with variables passe
         
 Just nodes,
 
-    - hosts: k3s_nods 
+    - hosts: k3s_nodes 
       become: yes
       vars: k3s_type: node
       roles:

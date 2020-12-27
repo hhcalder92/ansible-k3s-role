@@ -11,9 +11,13 @@
 - include: download.yml
 - include: raspberrypi/main.yml
 
-# because order matters
-- include: "{{k3s_type}}.yml"
-  when: k3s_type == 'master'
+# only care about the first node(who is generating token)
+- include: "master.yml"
+  when: master_ip == ansible_host
 
 - include: "{{k3s_type}}.yml"
-  when: k3s_type == 'node'
+  when: master_ip != ansible_host
+
+
+- include: registries.yaml
+  when: k3s_registries_enabled

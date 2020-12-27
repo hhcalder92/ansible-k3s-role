@@ -51,3 +51,11 @@
     path: /etc/sudoers
     validate: 'visudo -cf %s'
   when: ansible_distribution in ['CentOS', 'Red Hat Enterprise Linux']
+
+- name: Create k3s local storage directory
+  file:
+    path: "{{local_storage_path}}"
+    group: "users"
+    owner: "{{ ansible_user }}"
+    state: directory
+  when: local_storage_enabled

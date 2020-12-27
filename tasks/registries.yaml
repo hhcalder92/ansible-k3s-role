@@ -1,0 +1,31 @@
+---
+- name: "** Containerd Registry ** Create dir"
+  file:
+    path: "{{k3s_registries_dir}}"
+    owner: root
+    group: root
+    state: directory
+
+- name: "** Containerd Registry ** Copy K3s registry.yml file"
+  register: reg_file_update
+  template:
+    src: "registries.yaml.j2"
+    dest: "{{ k3s_registries_dir }}/registries.yaml"
+    owner: root
+    group: root
+    mode: 0755
+
+# TODO: handler
+- name: "** Containerd Registry ** Stop K3s service config changed"
+  systemd:
+    name: k3s
+    state: stopped
+  when: reg_file_update.changed
+  ignore_errors: true
+
+- name: "** Systemd ** Enable and check K3s service"
+  systemd:
+    name: k3s
+    state: started
+    enabled: yes
+  when: reg_file_update.changed

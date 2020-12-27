@@ -1,7 +1,13 @@
 # {{ansible_managed}}
-
-{% if 'master' in k3s_type  %}
-K3S_ARGS="{{ extra_server_args | default("") }}"
-{% else  %}
-K3S_ARGS="--server https://{{ master_ip }}:6443 --token {{ hostvars[groups['master'][0]]['token'] }} {{ extra_agent_args | default("") }}"
-{% endif  %}
+K3S_NODE_NAME={{inventory_hostname}}
+{% if master_ip == ansible_host  %}
+{% if k3s_datastore_endpoint is defined %}
+K3S_DATASTORE_ENDPOINT={{ k3s_datastore_endpoint }}
+K3S_CLUSTER_RESET={{k3s_cluster_reset}}
+{% else %}
+K3S_CLUSTER_INIT=true
+{% endif %}
+{% else %}
+K3S_URL="https://{{ master_ip }}:6443"
+K3S_TOKEN="{{ hostvars[groups['master'][0]]['token'] }}"
+{% endif %}
