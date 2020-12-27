@@ -12,9 +12,9 @@ ExecStartPre=-/sbin/modprobe overlay
 EnvironmentFile={{ k3s_systemd_environment_file_path | default("") }}
 
 {% if 'master' in k3s_type   %}
-{% if local_storage_enabled  %}ExecStart=/usr/local/bin/k3s server {{ extra_server_args | default("") }} --default-local-storage-path {{local_storage_path}}
-{% else  %}ExecStart=/usr/local/bin/k3s server {{ extra_server_args | default("") }}{% endif %}
-{% else  %}ExecStart=/usr/local/bin/k3s agent {{ extra_agent_args | default("") }}
+{% if local_storage_enabled  %}ExecStart=/usr/local/bin/k3s server {{ extra_server_args | default("") }} {{ extra_common_args | default("") }} --default-local-storage-path {{local_storage_path}}
+{% else  %}ExecStart=/usr/local/bin/k3s server {{ extra_server_args | default("") }} {{ extra_common_args | default("") }}{% endif %}
+{% else  %}ExecStart=/usr/local/bin/k3s agent {{ extra_agent_args | default("") }} {{ extra_common_args | default("") }}
 {% endif  %}
 
 KillMode=process
